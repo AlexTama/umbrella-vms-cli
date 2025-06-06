@@ -4,7 +4,7 @@ export interface Virus {
   id: string;
   name: string;
   description: string;
-  threatLevel: VirusLevel;
+  level: VirusLevel;
   mutationRate: number;
   createdAt: Date;
 }

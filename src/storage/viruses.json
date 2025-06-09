@@ -1,0 +1,16 @@
+[
+  {
+    "name": "T-Virus",
+    "type": "T-Virus",
+    "riskLevel": 5,
+    "infectivity": 100,
+    "description": "A highly infectious virus that causes severe mutations in humans."
+  },
+  {
+    "name": "G-virus",
+    "type": "G-Virus",
+    "riskLevel": 5,
+    "infectivity": 100,
+    "description": ""
+  }
+]

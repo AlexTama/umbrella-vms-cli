@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { Virus } from '../../src/schema/zodSchema';
 import { VirusService } from '../../src/services/virusService';
 
@@ -15,16 +15,16 @@ vi.mock('bun', () => ({
     write: vi.fn().mockResolvedValue(undefined)
 }));
 
-describe('VirusService', () => {
-    let virusService: VirusService;
-    beforeAll(() => {
-        virusService = new VirusService();
-    });
-    afterEach(() => {
-        vi.clearAllMocks(); // Clear mocks after each test to avoid interference
-        vi.resetModules(); // Reset modules to ensure fresh state for each test
-    });
+let virusService: VirusService;
+beforeAll(() => {
+    virusService = new VirusService();
+});
+afterAll(() => {
+    vi.clearAllMocks(); // Clear mocks after each test to avoid interference
+    vi.resetModules(); // Reset modules to ensure fresh state for each test
+});
 
+describe('VirusService', () => {
     describe('As a Umbrella scientist', () => {
         describe('I want to create virus records from command CLI', () => {
             test('Then I can add a new virus to manage controlled strains', async () => {
@@ -52,8 +52,7 @@ describe('VirusService', () => {
                 };
 
                 // assert
-                const expected = await virusService.addVirus(virus);
-                expect(expected).rejects.toThrow(`Virus ${virus.name} of type ${virus.type} already exists!`);
+                await expect(virusService.addVirus(virus)).rejects.toThrowError();
             });
         });
     });

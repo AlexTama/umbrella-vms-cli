@@ -10,7 +10,14 @@ vi.mock('bun', () => ({
             riskLevel: 5,
             infectivity: 100,
             description: 'A highly infectious virus that causes severe mutations in humans.'
-        } as Virus])
+        } as Virus,
+        {
+            name: 'Uroboros',
+            type: 'Uroboros',
+            riskLevel: 5,
+            infectivity: 100,
+            description: 'A highly infectious virus that causes severe mutations in humans.'
+        } as Virus]),
     })),
     write: vi.fn().mockResolvedValue(undefined)
 }));
@@ -54,6 +61,24 @@ describe('VirusService', () => {
                 // assert
                 await expect(virusService.addVirus(virus)).rejects.toThrowError();
             });
+        });
+
+        describe('When I call (getAllViruses) method', () => {
+          test('Then I can retrieve all viruses from the database', async () => {
+            // act
+            const viruses = await virusService.getAllViruses();
+
+            // assert
+            expect(viruses).toBeDefined();
+            expect(viruses.length).toBeGreaterThan(0);
+            expect(viruses[0]).toMatchObject({
+                name: 'G-Virus',
+                type: 'G-Virus',
+                riskLevel: 5,
+                infectivity: 100,
+                description: 'A highly infectious virus that causes severe mutations in humans.'
+            });
+          })
         });
     });
 });

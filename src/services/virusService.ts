@@ -19,12 +19,16 @@ export class VirusService {
         await write(file(DB_PATH), JSON.stringify(viruses, null, 2));
     }
 
-    async addVirus(virus: Virus): Promise<string> {
+    private validateVirus(virus: Virus): boolean {
         const validation = VirusSchema.safeParse(virus);
         if (!validation.success) {
             throw new Error(`Validation failed: ${validation.error.message}`);
         }
+        return true;
+    }
 
+    async addVirus(virus: Virus): Promise<string> {
+        this.validateVirus(virus);
         const viruses = await this.readViruses();
         const alreadyExists = viruses.some(v => v.name === virus.name && v.type === virus.type);
         if (alreadyExists) {
@@ -34,6 +38,25 @@ export class VirusService {
         viruses.push(virus);
         await this.writeViruses(viruses);
         return `🧬 Virus ${virus.name} of type ${virus.type} added successfully!`;
+    }
+
+    async getAllViruses(): Promise<Virus[]> {
+        const viruses = await this.readViruses();
+        if (viruses === undefined || viruses === null) {
+            throw new Error('Failed to read viruses from the database.');
+        }
+        
+        if (viruses.length === 0) {
+            return []
+        }
+
+        viruses.forEach(virus => {
+            if (!VirusSchema.safeParse(virus).success) {
+                throw new Error(`Invalid virus data found: ${JSON.stringify(virus)}`);
+            }
+        });
+
+        return viruses;
     }
 }
 
